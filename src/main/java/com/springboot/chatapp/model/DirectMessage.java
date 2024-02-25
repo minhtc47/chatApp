@@ -1,12 +1,10 @@
 package com.springboot.chatapp.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -15,33 +13,32 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "DirectMessage")
-public class DirectMessage implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class DirectMessage {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
-    @Column(name = "content")
+    @Lob
     private String content;
 
-    @Column(name = "fileUrl")
+    @Lob
     private String fileUrl;
 
-    @Column(name = "memberId")
-    private String memberId;
+    @ManyToOne
+    @JoinColumn(name = "memberId")
+    private Member member;
 
-    @Column(name = "conversationId")
-    private String conversationId;
+    @ManyToOne
+    @JoinColumn(name = "conversationId")
+    private Conversation conversation;
 
-    @Column(name = "deleted")
-    private Boolean deleted;
+    private boolean deleted;
 
-    @Column(name = "createdAt")
-    private Date createdAt;
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt")
-    private Date updatedAt;
+    @Column
+    private LocalDateTime updatedAt;
 
+    // getters and setters
 }
