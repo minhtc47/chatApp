@@ -2,12 +2,21 @@ package com.springboot.chatapp.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * $table.getTableComment()
@@ -17,25 +26,44 @@ import java.util.Date;
 @Table(name = "Member")
 public class Member implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
-    @Column(name = "role")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private MemberRole role;
 
-    @Column(name = "profileId")
-    private String profileId;
+    @ManyToOne
+    @JoinColumn(name = "profileId")
+    private Profile profile;
 
-    @Column(name = "serverId")
-    private String serverId;
+    @ManyToOne
+    @JoinColumn(name = "serverId")
+    private Server server;
 
-    @Column(name = "createdAt")
-    private Date createdAt;
+    @OneToMany(mappedBy = "member")
+    private List<Message> messages;
 
-    @Column(name = "updatedAt")
-    private Date updatedAt;
+    @OneToMany(mappedBy = "member")
+    private List<DirectMessage> directMessages;
+
+    @OneToMany(mappedBy = "memberOne")
+    private List<Conversation> conversationsInitiated;
+
+    @OneToMany(mappedBy = "memberTwo")
+    private List<Conversation> conversationsReceived;
+
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime updatedAt;
+
+    public enum MemberRole {
+        ADMIN,
+        MODERATOR,
+        GUEST
+    }
+    
 
 }

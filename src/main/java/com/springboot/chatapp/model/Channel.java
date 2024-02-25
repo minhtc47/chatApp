@@ -1,13 +1,12 @@
 package com.springboot.chatapp.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * $table.getTableComment()
@@ -15,30 +14,38 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "Channel")
-public class Channel implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class Channel {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "type")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private ChannelType type;
 
-    @Column(name = "profileId")
-    private String profileId;
+    @ManyToOne
+    @JoinColumn(name = "profileId")
+    private Profile profile;
 
-    @Column(name = "serverId")
-    private String serverId;
+    @ManyToOne
+    @JoinColumn(name = "serverId")
+    private Server server;
 
-    @Column(name = "createdAt")
-    private Date createdAt;
+    @OneToMany(mappedBy = "channel")
+    private List<Message> messages;
 
-    @Column(name = "updatedAt")
-    private Date updatedAt;
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 
+    @Column
+    private LocalDateTime updatedAt;
+
+    public enum ChannelType {
+        TEXT,
+        AUDIO,
+        VIDEO
+    }
+    
+    // getters and setters
 }
