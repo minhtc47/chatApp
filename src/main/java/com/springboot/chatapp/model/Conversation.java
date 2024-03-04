@@ -1,13 +1,10 @@
 package com.springboot.chatapp.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.UuidGenerator;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
 
 /**
  * $table.getTableComment()
@@ -15,24 +12,21 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "Conversation")
-public class Conversation implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class  Conversation {
     @Id
-    @Column(name = "id", nullable = false)
+    @UuidGenerator
     private String id;
 
-    @Column(name = "memberOneId")
-    private String memberOneId;
+    @ManyToOne
+    @JoinColumn(name = "memberOneId")
+    private Member memberOne;
 
-    @Column(name = "memberTwoId")
-    private String memberTwoId;
+    @ManyToOne
+    @JoinColumn(name = "memberTwoId")
+    private Member memberTwo;
 
-    @Column(name = "createdAt")
-    private Date createdAt;
+    @OneToMany(mappedBy = "conversation")
+    private List<DirectMessage> directMessages;
 
-    @Column(name = "updatedAt")
-    private Date updatedAt;
-
+    // getters and setters
 }

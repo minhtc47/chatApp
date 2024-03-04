@@ -2,12 +2,20 @@ package com.springboot.chatapp.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * $table.getTableComment()
@@ -17,28 +25,33 @@ import java.util.Date;
 @Table(name = "Server")
 public class Server implements Serializable {
 
-    private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "id", nullable = false)
+    @UuidGenerator
     private String id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "imageUrl")
+    @Lob
     private String imageUrl;
 
-    @Column(name = "inviteCode")
+    @Column(unique = true)
     private String inviteCode;
 
-    @Column(name = "profileId")
-    private String profileId;
+    @ManyToOne
+    @JoinColumn(name = "profileId")
+    private Profile profile;
 
-    @Column(name = "createdAt")
-    private Date createdAt;
+    @OneToMany(mappedBy = "server")
+    private List<Member> members;
 
-    @Column(name = "updatedAt")
-    private Date updatedAt;
+    @OneToMany(mappedBy = "server")
+    private List<Channel> channels;
+
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime updatedAt;
 
 }
