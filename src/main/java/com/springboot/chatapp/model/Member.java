@@ -1,10 +1,9 @@
 package com.springboot.chatapp.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,6 +20,7 @@ public class Member implements Serializable {
 
     @Id
     @Column(name = "id", nullable = false)
+    @UuidGenerator
     private String id;
 
     @Column(name = "role")
@@ -37,5 +37,4 @@ public class Member implements Serializable {
 
     @Column(name = "updatedAt")
     private Date updatedAt;
-
 }
